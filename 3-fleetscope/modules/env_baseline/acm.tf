@@ -79,25 +79,29 @@ resource "google_gke_hub_feature_membership" "acm_feature_member" {
 }
 
 # Allow Services Accounts to create trace
-resource "google_project_iam_binding" "acm_wi_trace_agent" {
-  project = var.fleet_project_id
+resource "google_project_iam_member" "acm_wi_trace_agent" {
+  for_each = toset(
+    [
+      "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/config-management-monitoring/sa/default",
+      "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/gatekeeper-system/sa/gatekeeper-admin",
+    ]
+  )
 
-  role = "roles/cloudtrace.agent"
-  members = [
-    "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/config-management-monitoring/sa/default",
-    "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/default/sa/cymbal-bank", #TODO rename/move
-    "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/gatekeeper-system/sa/gatekeeper-admin",
-  ]
+  project = var.fleet_project_id
+  role    = "roles/cloudtrace.agent"
+  member  = each.value
 }
 
 # Allow Services Accounts to send metrics
-resource "google_project_iam_binding" "acm_wi_metricWriter" {
-  project = var.fleet_project_id
+resource "google_project_iam_member" "acm_wi_metricWriter" {
+  for_each = toset(
+    [
+      "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/config-management-monitoring/sa/default",
+      "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/gatekeeper-system/sa/gatekeeper-admin",
+    ]
+  )
 
-  role = "roles/monitoring.metricWriter"
-  members = [
-    "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/config-management-monitoring/sa/default",
-    "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/default/sa/cymbal-bank", #TODO rename/move
-    "principal://iam.googleapis.com/projects/${data.google_project.cluster_project.number}/locations/global/workloadIdentityPools/${var.fleet_project_id}.svc.id.goog/subject/ns/gatekeeper-system/sa/gatekeeper-admin",
-  ]
+  project = var.fleet_project_id
+  role    = "roles/monitoring.metricWriter"
+  member  = each.value
 }
