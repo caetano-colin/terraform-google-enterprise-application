@@ -16,9 +16,22 @@
 
 locals {
   env                           = "development"
-  app_namespace                 = "transactions-development"
+  app_namespace                 = "ledger-development"
   app_service_account_name      = "cymbal-bank"
   pod_service_account_principal = "principal://iam.googleapis.com/projects/${local.cluster_project_number}/locations/global/workloadIdentityPools/${local.cluster_project_id}.svc.id.goog/subject/ns/${local.app_namespace}/sa/${local.app_service_account_name}"
+}
+
+resource "google_project_iam_member" "fleet_project_roles" {
+  for_each = toset(
+    [
+      "roles/cloudtrace.agent",
+      "roles/monitoring.metricWriter"
+    ]
+  )
+
+  project = local.fleet_project_id
+  role    = each.value
+  member  = local.pod_service_account_principal
 }
 
 module "alloydb" {

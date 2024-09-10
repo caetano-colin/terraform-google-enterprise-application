@@ -14,18 +14,3 @@
  * limitations under the License.
  */
 
-// These values are retrieved from the saved terraform state of the execution
-// of previous step using the terraform_remote_state data source.
-locals {
-  cluster_project_id = data.terraform_remote_state.multitenant.outputs.cluster_project_id
-  fleet_project_id = data.terraform_remote_state.multitenant.outputs.fleet_project_id
-}
-
-data "terraform_remote_state" "multitenant" {
-  backend = "gcs"
-
-  config = {
-    bucket = var.remote_state_bucket
-    prefix = "terraform/multi_tenant/${local.env}"
-  }
-}

@@ -15,8 +15,8 @@
  */
 
 locals {
-  env                           = "nonproduction"
-  app_namespace                 = "accounts-nonproduction"
+  env                           = "development"
+  app_namespace                 = "frontend-development"
   app_service_account_name      = "cymbal-bank"
   pod_service_account_principal = "principal://iam.googleapis.com/projects/${local.cluster_project_number}/locations/global/workloadIdentityPools/${local.cluster_project_id}.svc.id.goog/subject/ns/${local.app_namespace}/sa/${local.app_service_account_name}"
 }
@@ -32,16 +32,4 @@ resource "google_project_iam_member" "fleet_project_roles" {
   project = local.fleet_project_id
   role    = each.value
   member  = local.pod_service_account_principal
-}
-
-module "alloydb" {
-  source = "../../../../../modules/alloydb-psc-setup"
-
-  env                         = local.env
-  network_project_id          = var.network_project_id
-  db_region                   = var.cluster_regions[0]
-  app_project_id              = var.app_project_id
-  network_name                = var.network_name
-  psc_consumer_fwd_rule_ip    = var.psc_consumer_fwd_rule_ip
-  workload_identity_principal = local.pod_service_account_principal
 }

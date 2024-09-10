@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-// These values are retrieved from the saved terraform state of the execution
-// of previous step using the terraform_remote_state data source.
-locals {
-  cluster_project_id = data.terraform_remote_state.multitenant.outputs.cluster_project_id
-  fleet_project_id = data.terraform_remote_state.multitenant.outputs.fleet_project_id
-}
+terraform {
+  required_version = ">= 1.3"
 
-data "terraform_remote_state" "multitenant" {
-  backend = "gcs"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 5, < 7"
+    }
+  }
 
-  config = {
-    bucket = var.remote_state_bucket
-    prefix = "terraform/multi_tenant/${local.env}"
+  provider_meta "google" {
+    module_name = "blueprints/terraform/terraform-google-enterprise-application:appinfra/cymbal-bank/nonproduction/v0.1.0"
   }
 }
