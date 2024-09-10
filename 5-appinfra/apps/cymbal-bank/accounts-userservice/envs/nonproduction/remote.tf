@@ -18,6 +18,7 @@
 // of previous step using the terraform_remote_state data source.
 locals {
   cluster_project_id = data.terraform_remote_state.multitenant.outputs.cluster_project_id
+  fleet_project_id = data.terraform_remote_state.multitenant.outputs.fleet_project_id
 }
 
 data "terraform_remote_state" "multitenant" {
@@ -25,6 +26,6 @@ data "terraform_remote_state" "multitenant" {
 
   config = {
     bucket = var.remote_state_bucket
-    prefix = "terraform/multi_tenant/nonproduction"
+    prefix = "terraform/multi_tenant/${local.env}"
   }
 }
