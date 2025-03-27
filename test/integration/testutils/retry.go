@@ -38,6 +38,7 @@ var (
 		".Internal error encountered*": "Internal error encountered",
 
 		// generic::permission_denied: Request is prohibited by organization's policy.
-		".*Request is prohibited by organization's policy*.": "VPC-SC propagation.",
+		".*Request is prohibited by organization's policy*.":                                                        "VPC-SC propagation.",
+		".*Error waiting for Creating Connection: Error code 9, message: Failed to verify authorizer_credential.*.": "servicedirectory.networks.access propagation time",
 	}
 )

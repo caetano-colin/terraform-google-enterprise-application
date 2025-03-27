@@ -48,4 +48,4 @@ options:
   env:
     - 'DOCKER_CLI_EXPERIMENTAL=enabled'
   pool:
-    name: $_WORKER_POOL
+    name: '${_PRIVATE_POOL}'

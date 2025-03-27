@@ -65,6 +65,8 @@ module "project" {
     "sourcerepo.googleapis.com",
     "sqladmin.googleapis.com",
     "storage-api.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "servicedirectory.googleapis.com",
   ]
 
   activate_api_identities = [
@@ -229,7 +231,11 @@ module "cluster_private_service_connect" {
 }
 
 resource "google_compute_router" "nat_router" {
+<<<<<<< HEAD
   for_each = module.cluster_vpc
+=======
+  for_each = local.create_nat_iterator
+>>>>>>> 3dc9d0a2f2804150c7896e929e3971e9409bab2d
 
   name    = "nat-router-us-central-1"
   region  = "us-central1"

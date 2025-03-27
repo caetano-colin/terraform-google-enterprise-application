@@ -31,10 +31,15 @@ The Setup module creates the required prerequisite resources to deploy the bluep
 | gitlab\_pat\_secret\_name | n/a |
 | gitlab\_project\_number | n/a |
 | gitlab\_secret\_project | n/a |
+| gitlab\_service\_directory | n/a |
 | gitlab\_url | n/a |
+<<<<<<< HEAD
 | gitlab\_webhook\_secret\_id | n/a |
 | network\_project\_id | n/a |
 | network\_project\_number | n/a |
+=======
+| gitlab\_webhook\_secret\_id | =========================== OUTPUTS =========================== |
+>>>>>>> 3dc9d0a2f2804150c7896e929e3971e9409bab2d
 | org\_id | n/a |
 | project\_id | n/a |
 | project\_number | n/a |
@@ -44,9 +49,6 @@ The Setup module creates the required prerequisite resources to deploy the bluep
 | single\_project\_cluster\_subnetwork\_name | n/a |
 | single\_project\_cluster\_subnetwork\_self\_link | n/a |
 | teams | n/a |
-| workerpool\_network\_id | n/a |
-| workerpool\_network\_name | n/a |
-| workerpool\_network\_project\_id | n/a |
-| workerpool\_network\_self\_link | n/a |
+| worker\_pool\_id | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

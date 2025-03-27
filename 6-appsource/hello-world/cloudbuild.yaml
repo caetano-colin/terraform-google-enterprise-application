@@ -49,4 +49,8 @@ options:
   env:
     - 'DOCKER_CLI_EXPERIMENTAL=enabled'
   pool:
+<<<<<<< HEAD
     name: $_WORKER_POOL
+=======
+    name: '${_PRIVATE_POOL}'
+>>>>>>> 3dc9d0a2f2804150c7896e929e3971e9409bab2d

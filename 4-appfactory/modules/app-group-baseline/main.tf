@@ -27,7 +27,7 @@ locals {
         "roles/storage.admin", "roles/iam.serviceAccountAdmin",
         "roles/artifactregistry.admin", "roles/clouddeploy.admin",
         "roles/cloudbuild.builds.editor", "roles/privilegedaccessmanager.projectServiceAgent",
-        "roles/iam.serviceAccountUser", "roles/source.admin"
+        "roles/iam.serviceAccountUser", "roles/source.admin", "roles/cloudbuild.connectionAdmin"
       ]
     } },
     {
@@ -45,6 +45,9 @@ locals {
 
   secret_id             = var.cloudbuildv2_repository_config.github_secret_id != null ? var.cloudbuildv2_repository_config.github_secret_id : var.cloudbuildv2_repository_config.gitlab_authorizer_credential_secret_id
   secret_project_number = regex("projects/([^/]*)/", local.secret_id)[0]
+  // If the user specify a Cloud Build Worker Pool, utilize it in the trigger
+  optional_worker_pool = var.worker_pool_id != "" ? { "_PRIVATE_POOL" = var.worker_pool_id } : {}
+
 }
 
 data "google_project" "admin_project" {
@@ -81,7 +84,11 @@ module "cloudbuild_repositories" {
   }
   cloud_build_repositories = var.cloudbuildv2_repository_config.repositories
 
-  depends_on = [google_access_context_manager_service_perimeter_egress_policy.cloudbuild_egress_policy, google_access_context_manager_service_perimeter_dry_run_egress_policy.cloudbuild_egress_policy]
+  depends_on = [google_access_context_manager_service_perimeter_egress_policy.cloudbuild_egress_policy, google_access_context_manager_service_perimeter_dry_run_egress_policy.cloudbuild_egress_policy, time_sleep.wait_propagation]
+}
+
+resource "time_sleep" "wait_propagation" {
+  create_duration = "120s"
 }
 
 module "app_admin_project" {
@@ -172,13 +179,12 @@ module "tf_cloudbuild_workspace" {
   buckets_force_destroy    = var.bucket_force_destroy
   cloudbuild_sa_roles      = local.cloudbuild_sa_roles
 
-  substitutions = {
+  substitutions = merge({
     "_GAR_REGION"                   = var.location
     "_GAR_PROJECT_ID"               = var.gar_project_id
     "_GAR_REPOSITORY"               = var.gar_repository_name
     "_DOCKER_TAG_VERSION_TERRAFORM" = var.docker_tag_version_terraform
-    "_PRIVATE_POOL"                 = var.workerpool_id
-  }
+  }, local.optional_worker_pool)
 
   cloudbuild_plan_filename  = "cloudbuild-tf-plan.yaml"
   cloudbuild_apply_filename = "cloudbuild-tf-apply.yaml"
