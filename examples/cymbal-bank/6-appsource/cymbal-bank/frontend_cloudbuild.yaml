@@ -56,4 +56,4 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY
   pool:
-    name: $_WORKER_POOL
+    name: $_PRIVATE_POOL

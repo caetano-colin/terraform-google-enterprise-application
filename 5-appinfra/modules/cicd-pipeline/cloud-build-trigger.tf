@@ -51,7 +51,7 @@ resource "google_cloudbuild_trigger" "ci" {
       _SOURCE_STAGING_BUCKET     = "gs://${google_storage_bucket.release_source_development.name}"
       _CACHE                     = local.cache_filename
       _CLOUDDEPLOY_PIPELINE_NAME = google_clouddeploy_delivery_pipeline.delivery-pipeline.name
-      _WORKER_POOL               = var.workerpool_id
+      _PRIVATE_POOL               = var.workerpool_id
     },
     var.additional_substitutions, local.optional_worker_pool
   )
