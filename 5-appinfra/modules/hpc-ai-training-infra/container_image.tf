@@ -111,13 +111,13 @@ gcloud builds submit ${path.module} \
   --project=${var.infra_project} \
   --service-account=${google_service_account.builder.id} \
   --gcs-log-dir=${google_storage_bucket.build_logs.url} \
-  --worker-pool=${var.workerpool_id} || (
+  --worker-pool=${var.worker_pool_id} || (
     sleep 45 && gcloud builds submit ${path.module} \
       --tag ${var.region}-docker.pkg.dev/${var.infra_project}/${google_artifact_registry_repository.private_images.name}/ai-train:${local.docker_tag_version_terraform} \
       --project=${var.infra_project} \
       --service-account=${google_service_account.builder.id} \
       --gcs-log-dir=${google_storage_bucket.build_logs.url}\
-      --worker-pool=${var.workerpool_id}
+      --worker-pool=${var.worker_pool_id}
   )
 EOF
 

@@ -41,7 +41,7 @@ locals {
   org_ids             = distinct([for env in var.envs : env.org_id])
   use_csr             = var.cloudbuildv2_repository_config.repo_type == "CSR"
   service_repo_name   = var.cloudbuildv2_repository_config.repositories[var.service_name].repository_name
-  worker_pool_project = element(split("/", var.workerpool_id), index(split("/", var.workerpool_id), "projects") + 1, )
+  worker_pool_project = element(split("/", var.worker_pool_id), index(split("/", var.worker_pool_id), "projects") + 1, )
 
   secret_id             = var.cloudbuildv2_repository_config.github_secret_id != null ? var.cloudbuildv2_repository_config.github_secret_id : var.cloudbuildv2_repository_config.gitlab_authorizer_credential_secret_id
   secret_project_number = regex("projects/([^/]*)/", local.secret_id)[0]

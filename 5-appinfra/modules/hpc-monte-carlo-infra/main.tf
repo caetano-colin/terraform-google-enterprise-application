@@ -17,7 +17,7 @@
 locals {
   docker_tag_version_terraform = "v1"
   namespace                    = "${var.team}-${var.env}"
-  worker_pool_project          = element(split("/", var.workerpool_id), index(split("/", var.workerpool_id), "projects") + 1, )
+  worker_pool_project          = element(split("/", var.worker_pool_id), index(split("/", var.worker_pool_id), "projects") + 1, )
 }
 
 resource "google_project_iam_member" "team_roles" {
